@@ -8,12 +8,11 @@ type User{
 
 }
 type Query{
-    users:[User!]
-    authUser:User
+     authUser:User
     user(userId:ID!):User
 }
 type Mutation{
-    signUp(input:SignUpInput!):User
+    singUp(input:SignUpInput!):User 
     login(input:LoginInput!):User
     logout:LogoutResponse
 
