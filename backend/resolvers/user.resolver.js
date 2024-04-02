@@ -4,15 +4,16 @@ import bcrypt from "bcryptjs";
 
 const userResolver = {
   Mutation: {
-    singUp: async (_, { input }, context) => {
+    signUp: async (_, { input }, context) => {
       try {
         const { username, name, password, gender } = input;
+        console.log(input);
         if (!username || !name || !password || !gender) {
           throw new Error("All fields are required");
         }
         const existingUser = await User.findOne({ username });
         if (existingUser) {
-          throw new Error("All fields are required");
+          throw new Error("Try another user name");
         }
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -24,20 +25,20 @@ const userResolver = {
           name,
           password: hashedPassword,
           gender,
-          profilePicture: gender == "mail" ? boyProfilePic : girlProfilePic,
+          profilePicture: gender == "male" ? boyProfilePic : girlProfilePic,
         });
         await newUser.save();
-        await context.login(newUser);
+        // await context.login(newUser);
         return newUser;
       } catch (error) {
         console.error("Error in signUp : ", error);
-        throw new Error(err.message || "Internal server error");
+        throw new Error(error.message || "Internal server error");
       }
     },
     login: async (_, { input }, context) => {
       try {
         const { username, password } = input;
-        const { user } = await constext.authenticate("graphql-local", {
+        const { user } = await context.authenticate("graphql-local", {
           username,
           password,
         });
@@ -48,13 +49,13 @@ const userResolver = {
         throw new Error(error.message || "Internal server error");
       }
     },
-    logout: async (_, context) => {
+    logout: async (_, __, context) => {
       try {
-        await constext.logout();
-        req.session.destroy((err) => {
+        await context.logout();
+        context.req.session.destroy((err) => {
           if (err) throw err;
         });
-        res.clearCookie("connect.sid");
+        context.res.clearCookie("connect.sid");
         return { message: "Logout successfully" };
       } catch (error) {
         console.error("Error in logout : ", error);
@@ -63,7 +64,7 @@ const userResolver = {
     },
   },
   Query: {
-    authUser: async (_, context) => {
+    authUser: async (_, __, context) => {
       try {
         const user = await context.getUser();
         return user;

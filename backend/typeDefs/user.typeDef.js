@@ -3,6 +3,7 @@ type User{
     _id:ID!
     username:String!
     password:String!
+    name:String!
     profilePicture:String
     gender:String!
 
@@ -12,7 +13,7 @@ type Query{
     user(userId:ID!):User
 }
 type Mutation{
-    singUp(input:SignUpInput!):User 
+    signUp(input:SignUpInput!):User 
     login(input:LoginInput!):User
     logout:LogoutResponse
 
