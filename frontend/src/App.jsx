@@ -12,12 +12,7 @@ function App() {
   const { data } = useQuery(GET_AUTHENTICATED_USER);
 
   return (
-    <div className="bg-indigo-400 h-screen w-screen text-white p-10 font-semibold">
-      <div>
-        <Link to="/">Home</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/register">Register</Link>
-      </div>
+    <div className="   ">
       <Routes>
         <Route
           path="/"
